@@ -1,0 +1,73 @@
+create or replace PROCEDURE    get_attendance (p_date IN DATE DEFAULT NULL) IS
+v_status CHAR(1):='L';
+v_date DATE:= SYSDATE-1;
+v_emp_code hr_attendance.emp_code%TYPE:='0';
+v_in_time hr_attendance.in_time%TYPE;
+v_add_hour CONSTANT NUMBER :=2;
+v_row_count NUMBER :=0;
+CURSOR att_cur IS
+     SELECT  a.userid,
+     a.logtime,s.start_time,
+     ABS(s.end_time-s.start_time)*24 work_hour,s.delay_alowed
+     FROM "attlog"@odbc_1 a,hr_employee e, hr_shift s
+     WHERE TO_CHAR(a.logtime,'yyyy-mm-dd') BETWEEN TO_CHAR(v_date,'yyyy-mm-dd')
+     AND TO_CHAR(v_date+1,'yyyy-mm-dd')
+     AND e.work_status IN ('OD','OL')
+     AND a.userid=e.emp_code
+     AND e.shift_code = NVL(s.shift_code,'01')
+     ORDER BY a.userid,a.logtime;
+
+
+/******************************************************************************
+   NAME:       get_attendance
+   PURPOSE:    
+
+   REVISIONS:
+   Ver        Date        Author           Description
+   ---------  ----------  ---------------  ------------------------------------
+   1.0        3/7/2018          1. Created this procedure.
+
+   NOTES:
+
+******************************************************************************/
+BEGIN
+   IF NOT p_date IS NULL THEN
+     v_date := p_date;
+  END IF;
+   --Select attendance data from odbc
+   FOR c1 IN att_cur
+     LOOP
+       --Check no data
+       IF c1.userid <> v_emp_code THEN -- for first row of a user data
+         --Exclude out time of yesterdays night shift worker
+         IF ABS((TO_DATE(TO_CHAR(c1.logtime,'HH24:MI'),'HH24:MI')-TO_DATE(TO_CHAR(c1.start_time,'HH24:MI'),'HH24:MI')))*24 <= v_add_hour THEN
+           v_emp_code:=c1.userid;
+           v_in_time:=c1.logtime; --Store in temp record
+           IF ABS((TO_DATE(TO_CHAR(c1.logtime,'HH24:MI'),'HH24:MI')-TO_DATE(TO_CHAR(c1.start_time,'HH24:MI'),'HH24:MI')))*24 <= c1.delay_alowed THEN
+             v_status:='P';
+           END IF;
+           INSERT INTO hr_attendance (emp_code,attendance_date,in_time,status)
+           VALUES (c1.userid,v_date,TO_DATE(TO_CHAR(c1.logtime,'HH24:MI'),'HH24:MI'),v_status);
+           v_row_count :=att_cur%ROWCOUNT;
+         END IF;  
+       ELSE -- c1.emp_code = v_emp_code THEN -- as it is sorted, user's >first row 
+         IF ABS(c1.logtime-v_in_time)*24<=(c1.work_hour+v_add_hour) THEN
+           UPDATE hr_attendance SET out_time=TO_DATE(TO_CHAR(c1.logtime,'HH24:MI'),'HH24:MI')
+           WHERE emp_code=c1.userid
+           AND attendance_date=v_date;
+           v_row_count :=att_cur%ROWCOUNT;
+         END IF;
+       END IF;
+       
+     END LOOP;
+     IF v_row_count = 0 THEN
+         RAISE NO_DATA_FOUND;
+     END IF;
+     COMMIT;     
+   EXCEPTION
+     WHEN NO_DATA_FOUND THEN
+       RAISE;
+     WHEN OTHERS THEN
+       -- Consider logging the error and then re-raise
+       RAISE;
+END get_attendance;
