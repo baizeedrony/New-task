@@ -1,0 +1,17 @@
+create or replace procedure inserttest(
+p_id in test.id%TYPE,
+p_name in test.name%TYPE,
+p_create in test.createdby%TYPE,
+p_date in TEST.CREATEDDATE%TYPE)
+IS
+begin
+insert into TEST(id,name,createdby,createddate)
+values(p_id,p_name,p_create,p_date);
+commit;
+end;
+/
+
+
+begin
+inserttest('100','rony','baizeed',sysdate);
+end;
