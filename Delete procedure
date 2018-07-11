@@ -1,0 +1,14 @@
+create or replace procedure Deletetest(
+p_id in test.id%TYPE)
+IS
+begin
+delete from TEST
+where id=p_id;
+commit;
+end;
+/
+
+--for executing the procedure.
+begin
+Deletetest('103');
+end;
