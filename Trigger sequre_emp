@@ -1,0 +1,9 @@
+create or replace trigger sequre_emp
+before insert or update or delete on test
+for each row
+begin
+if (to_char(sysdate,'hh24:mi') not between'8:00' and '15:00') or (to_char(sysdate,'dy') in ('tue','wed')) then
+raise_application_error(-20500,'you may insert in the business hour');
+end if;
+end;
+/
