@@ -1,0 +1,7 @@
+#First,Create a folder to your desired drive.
+#then create a batch file.(exp hr/hr@orcl file=F:\Auto_backup\daily_backup).
+#Next go to the desktop icon this pc
+ @right click on it and select manage.
+ @click on Task Scheduler.right side of the window click on create Basic Task.
+ @Write a Proper Name & Descriptions.
+ @
