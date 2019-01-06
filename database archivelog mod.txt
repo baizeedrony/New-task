@@ -1,0 +1,18 @@
+sqlplus connect:sys as sysdba
+Sql>archive log list
+SQL>select * from v$controlfile;
+SQL>select * from v$logfile;
+SQL>select * from v$datafile;
+SQL>shutdown immediate;
+SQL>startup nomount;
+SQL>show parameters log_archive_dest_1
+SQL>alter system set log_archive_dest_1='location=USE_DB_FILE_RECOVERY_DEST' scope=both;
+SQL>show parameters format
+
+SQL>shutdown immediate
+SQL>startup mount
+SQL>archive log list
+SQL>alter database archivelog;
+SQL>alter database open;
+SQL>archive log list
+SQL>shutdown
