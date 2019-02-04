@@ -2,6 +2,7 @@ cd PycharmProjects/myFlaskApp/ --for seeing project directory.
 ls --for seeing directory file.
 git status --for git status
 git diff -- changing of the file seeing
+git add .   ----firsty git add korte habe
 git commit -m 'logout updated properly' -- for commiting in the local pc
 git push -for commiting in the git.
 git pull-for archiving update fetures which worked previously
