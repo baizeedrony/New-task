@@ -1,0 +1,9 @@
+--For seeing the specifiq constraint of a table
+select * from user_constraints
+where table_name='CC_ADMISSION_M';
+
+---another way is
+
+SELECT COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_COLUMN_NAME, REFERENCED_TABLE_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_NAME = 'ACCOUNT';

@@ -1,0 +1,17 @@
+@shut down the database instance:
+-----------------------------------
+SQL>SHUTDOWN IMMEDIATE
+
+@copy the datafiles to the backup location:
+------------------------------------------
+$cp $ORACLE_BASE/ORCL/datafile/*.dbf\
+>/u02/backup/datafile
+
+@copy the control files to the backup location:
+------------------------------------------------
+$cp $ORACLE_BASE/ORCL/controlfile/*.dbf\
+>/u02/backup/controlfile
+
+@Start the instance and open the database:
+----------------------------------------
+SQL>STARTUP

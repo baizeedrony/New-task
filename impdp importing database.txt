@@ -1,0 +1,1 @@
+impdp sys/123@orcl directory= dumpfile logfile= SCHEMAS=schemaname REMAP_SCHEMA=schemaname:anothername

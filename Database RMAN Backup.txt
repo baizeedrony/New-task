@@ -1,0 +1,17 @@
+RMAN BACKUP:
+------------------
+
+1.Fist Take your database in mount Position.
+>sqlplus / as sysdba
+>show parameter recover;
+>shutdown immediate
+>startup mount
+>alter database archivelog;
+>alter database open;
+>archivelog list
+
+2.>target RMAN \
+>DEFAULT DEVICE TYPE TO DISK;
+>CONFIGURE DEVICE TYPE DISK BACKUP TYPE TO COPY;
+> CONFIGURE CONTROLFILE AUTOBACKUP ON;
+> BACKUP DATABASE PLUS ARCHIVELOG;

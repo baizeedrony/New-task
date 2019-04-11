@@ -1,0 +1,4 @@
+update product
+set p_qty=:P5_P_QTY-:P7_INV_QTY
+where p_id=:P7_P_ID
+and p_name=:P7_P_NAME

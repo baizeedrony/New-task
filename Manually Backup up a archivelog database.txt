@@ -1,0 +1,15 @@
+#Identify tablespace and their data files:
+----------------------------------------------
+SQL>select file_name, tablespace_name from dba_data_files;
+
+#FOR EACH TABLESPACE:
+>Put the tablespace into backup mde:
+SQL> ALTER TABLESPACE users BEGIN BACKUP;
+-------------------------------------------
+>Copy the datafiles for that tablespace to the backup location:
+----------------------------------------------------------
+$ cp $ORACLE_HOME/oradata/orcl/users*.dbf /u02/backup/datafile
+
+>Bring the tablespace out of backup mode:
+-------------------------------------
+SQL> ALTER TABLESPACE users END BACKUP;

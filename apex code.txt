@@ -1,0 +1,32 @@
+//Apex Validations Code
+----------------------------
+extract(hour from current_timestamp)>=9 and
+extract(hour from current_timestamp)<4
+
+
+
+:REQUEST in ('Insert','update','delete')
+
+Authentication Schema Code:
+---------------------------
+v_org sap.sap_org.org_code%TYPE;
+BEGIN
+  SELECT org_code INTO v_org
+  FROM sap_org_user
+  WHERE UPPER(user_name) = UPPER(:P101_USERNAME);
+ -- WHERE UPPER(user_name) = :APP_USER;
+  :GLOBAL_ORG_CODE :=v_org;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+  -- First clear the errors
+--apex.message.clearErrors();
+--apex.message.alert( 'Load complete.');
+   raise_application_error(-20001, 'Your account is not valid');
+  /**
+  apex_error.add_error (
+    p_message          => 'This custom account is not active!',
+    p_display_location => apex_error.c_inline_in_notification );
+  raise_application_error(-20001, 'Custom NO_DATA_FOUND');  
+  **/
+END;
+end;

@@ -5,4 +5,4 @@
 sys sql>create DIRECTORY oracle_full AS 'F:\datapump\full_exp';
 sys SQL>GRANT read,write ON DIRECTORY oracle_full TO hr;
 SYS SQL>GRANT datapump_exp_full_database TO hr;
-on cmd>expdp hr/hr@orcl DIRECTORY=oracle_full DUMPFILE=hr.dmp LOGFILE=fullexp_hr.log FULL=YES;
+cmd>expdp hr/hr@orcl DIRECTORY=oracle_full DUMPFILE=hr.dmp LOGFILE=fullexp_hr.log FULL=YES;

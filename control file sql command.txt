@@ -1,0 +1,9 @@
+select name from v$controlfile;
+#backup control file:
+-------------------
+sql>alter database backup controlfile to '/u01/backup/controlfile.bak';
+
+#By generating a script that re-creates it, in a trace file:
+--------------------------------------------------------------
+SQL>ALTER DATABASE BACKUP CONTROLFILE TO TRACE;
+

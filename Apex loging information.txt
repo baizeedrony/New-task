@@ -1,0 +1,17 @@
+apex admin user_name=rony
+new admin password:Baizeed_0
+
+
+
+workspace=dev
+user=rony
+password=rony
+
+ //192.168.0.100/ords
+
+online apex password:Baizeed_166 name :rony
+
+-----------------------------------------
+workspace:account
+name:rony
+password:1

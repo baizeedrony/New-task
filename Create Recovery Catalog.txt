@@ -1,0 +1,23 @@
+Three Steps need to Creating the Recovery Catalog:
+1.Configure database in which you want to store the recovery catalog. 
+2.Create the recovery catalog owner.
+3.Create the recovery catalog.
+
+Step 1:
+--------
+SQL>CREATE TABLESPACE rcat_ts DATAFILE SIZE 15M;
+
+Step 2:
+---------
+SQL>create USER rcowner IDENTIFIED BY rcpass
+TEMPORARY TABLESPACE temp
+DEFAULT TABLESPACE rcat_ts
+QUOTA UNLIMITED ON rcat_ts;
+SQL>GRANT recovery_catalog_owner TO rcowner;
+
+Step 3:
+--------
+$rman
+RMAN>connect CATALOG username/password@net_service_name
+--Execute the CREATE CATALOG command:
+RMAN>CREATE CATALOG;

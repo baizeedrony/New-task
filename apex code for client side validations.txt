@@ -1,0 +1,74 @@
+declare
+v_total number(10);
+begin
+select sum(amount*qty)
+into v_total
+from cc_collect1
+where mrno=:P5_MRNO;
+update cc_collect1
+set total_amount=v_total
+where mrno=:P5_MRNO;
+commit;
+
+
+-----------------------
+apex.item("TOTAL_AMOUNT").setValue(
+apex.item("AMOUNT").getValue())
+
+-------------------------------
+<script type="text/javascript">
+ function getVal(pNd){
+ return ($v(pNd)!= "")?parseFloat($v(pNd)):0;
+ }
+ function calcItems(){
+ $s('TOTAL_AMOUNT',getVal('AMOUNT')*getVal('QTY'));
+ }
+</script>
+
+-----------------------IG client side calculation Main Code,
+
+var model = this.data.model,
+    rec = this.data.record,
+    meta = model.getRecordMetadata(this.data.recordId);
+
+if ( meta.inserted ) {
+ var amnt = model.getValue(rec,"AMOUNT");
+     amnt = amnt* model.getValue(rec,"QTY");
+     model.setValue(rec,"TOTAL_AMOUNT", amnt);
+}
+----------------------------
+var grid=apex.region("Account").widget().interactiveGrid('getViews','grid');
+var grid.model;
+var record = grid.getSelectedRecords();
+record.forEach(function(object, index){
+rec = record[index];
+model.setValue(rec, 'Amount', $v("TOTAL_AMOUNT"))
+});
+
+---------------------------------------IG client side calculation Main Code with discount.
+var model = this.data.model,
+    rec = this.data.record,
+    meta = model.getRecordMetadata(this.data.recordId);
+
+if ( meta.inserted ) {
+ var amnt = model.getValue(rec,"AMOUNT");
+ var discnt = model.getValue(rec,"DISCOUNT");
+     amnt = (amnt* model.getValue(rec,"QTY"))-discnt;
+     model.setValue(rec,"TOTAL_AMOUNT", amnt);
+}
+
+------------------------------------------------
+//This code to be applied for client side calculations in the interactive grid regions.
+//fire on=yes
+var model = this.data.model,
+    rec = this.data.record,
+    meta = model.getRecordMetadata(this.data.recordId);
+
+if ( meta.inserted ) {
+ var amnt = model.getValue(rec,"AMOUNT");
+ var discnt = amnt*model.getValue(rec,"DISCOUNT")/100;
+     amnt = (amnt* model.getValue(rec,"QTY"))-discnt;
+     model.setValue(rec,"TOTAL_AMOUNT", amnt);
+}
+
+(:amount*NVL(:discount,0)/100)*:qty)
